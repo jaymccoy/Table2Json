@@ -1,3 +1,5 @@
+package Table2Json;
+
 public class ConnectionConfig {
 
     public String url;

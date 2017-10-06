@@ -1,0 +1,112 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>Table2Json</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        input {
+            width: 800px;
+        }
+    </style>
+
+</head>
+<body>
+<h1>Table2Json</h1>
+<form method="POST" action="" id="form">
+    <fieldset>
+        <legend>Connection config</legend>
+        <table>
+            <tbody>
+            <tr>
+                <td width="100">url</td>
+                <td><input type="text" id="url" value="jdbc:postgresql://localhost:32769/jay_database"></td>
+            </tr>
+            <tr>
+                <td>user</td>
+                <td><input type="text" id="user" value="postgres"></td>
+            </tr>
+            <tr>
+                <td>pass</td>
+                <td><input type="password" id="pass" value=""></td>
+            </tr>
+            </tbody>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>Query config</legend>
+        <table>
+            <tbody>
+            <tr>
+                <td width="100">database</td>
+                <td><input type="text" id="database" value="jay_database"></td>
+            </tr>
+            <tr>
+                <td>schema</td>
+                <td><input type="text" id="schema" value="jay_schema"></td>
+            </tr>
+            <tr>
+                <td>table</td>
+                <td><input type="text" id="table" value="jay_table1">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </fieldset>
+</form>
+<button id="submit">submit</button>
+
+<script type="text/javascript">
+
+    function FormDataToJSON(FormElement) {
+        var formData = new FormData(FormElement);
+        var ConvertedJSON = {};
+        for (const [key, value]  of formData.entries()) {
+            ConvertedJSON[key] = value;
+        }//end for
+        return ConvertedJSON
+    }//end function
+
+
+    $(document).ready(function () {
+
+        $("#submit").click(function () {
+
+            var url = $("#url").val();
+            var user = $("#user").val();
+            var pass = $("#pass").val();
+
+            var database = $("#database").val();
+            var schema = $("#schema").val();
+            var table = $("#table").val();
+
+            var payload = {
+                "url": url,
+                "user": user,
+                "pass": pass
+            };
+
+            var request = $.ajax({
+                url: "http://localhost:8081/Table2Json/table2json?database=" + database + "&schema=" + schema + "&table=" + table,
+                method: "POST",
+                type: "POST",
+                dataType: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(payload)
+            });
+
+            console.log(request);
+
+            request.done(function (data) {
+                alert("success: " + data);
+                $("#div1").html(data);
+            });
+
+        });
+    });
+</script>
+
+<hr>
+<div id="div1"><h2><i>Output</i></h2></div>
+</body>
+</html>
